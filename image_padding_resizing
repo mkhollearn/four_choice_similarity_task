@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Aug  8 20:07:57 2020
+
+@author: martinahollearn
+RESIZES THE IMAGES TO 256X256 AND ADDS PADDING TO IT - MAKE SURE TO CHECK EACH IMAGE AFTERWARDS
+"""
+
+
+#open image in PIL
+#figure out dimensions
+#take width as the primary measure or take height, depending on which one is bigger
+#add white space to the smaller to dimension
+#resize the image to 255x255
+
+
+from PIL import Image, ImageOps
+
+def image_padding(image_path,final_size): #only good for one image, so make sure its in a for loop 
+
+    #image_path = "../finished_stim/apple_t.png"
+    image = Image.open(image_path)
+    #final_size = (256, 256)
+
+    width, height = image.size 
+    
+    if width > height :
+        desired_size = width
+    else:
+        desired_size = height
+        
+    
+    old_size = image.size  
+    
+    ratio = float(desired_size)/max(old_size)
+    new_size = tuple([int(x*ratio) for x in old_size])
+    
+    delta_w = desired_size - new_size[0]
+    delta_h = desired_size - new_size[1]
+    padding = (delta_w//2, delta_h//2, delta_w-(delta_w//2), delta_h-(delta_h//2))
+    new_image = ImageOps.expand(image, padding)
+    
+    new_image_final = new_image.resize(final_size)
+    
+    new_image_final.save(image_path)
+    
+    
+    print(width,height)
+    print(new_image_final.size)
+
+
+
+from glob import glob
+
+image_path = '../finished_stim/*.png'
+all_image_names = glob(image_path)
+
+
+for counter in all_image_names:
+    image_padding(counter, (256,256))
+
+    
+    
+    
